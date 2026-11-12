@@ -12,7 +12,7 @@ const MAP = {
     blurb: 'Stylized GPU grass field with steerable wind, colors, light and camera.' },
   bluntCMS: { cat: 'big' },
   'ai-racing-gdot-thing': { cat: 'big', title: 'AI Racing' },
-  'burnt-fighters': { cat: 'big' },
+  'burnt-fighters': { cat: 'code' },
   informatica: { cat: 'exp', img: 'previews/informatica.webp', blurb: 'Informatics coursework and experiments, with a gallery.' },
   factorial2: { cat: 'exp', img: 'previews/factorial2.webp', blurb: 'Area between x² and cos x: bisection, trapezoids and Simpson.' },
   'hypocycloid-explainer': { cat: 'exp', blurb: 'How a hypocycloid is drawn, step by step.' },
