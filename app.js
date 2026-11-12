@@ -1,33 +1,41 @@
 const USER = 'Alexander-288';
-const me = `https://github.com/${USER}.png?size=80`;
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// where each repo goes, plus its preview and a better blurb
-// cat: big | exp ; anything not listed lands in "Code projects" (or "Big" if it has Pages)
+// where each repo goes; order sets the order on the page
+// cat: big | exp ; anything else with Pages lands in "big", without Pages in "code"
 const MAP = {
-  fold:        { cat: 'big', img: 'previews/fold.webp', blurb: 'Gradient and fold generator on the GPU, with image, video and shader export.' },
-  Tessera:     { cat: 'big', img: 'previews/tessera.webp', blurb: 'Color library in your browser. Find colors by describing them.' },
-  bluntCMS:    { cat: 'big' },
+  fold: { cat: 'big', order: 2, img: 'previews/fold.webp', logo: 'logos/fold.svg', lbg: '#111', lsize: '62%',
+    blurb: 'Gradient and fold generator on the GPU, with image, video and shader export.' },
+  Tessera: { cat: 'big', order: 3, img: 'previews/tessera.webp', logo: 'logos/tessera.svg',
+    blurb: 'Color library in your browser. Find colors by describing them.' },
+  'graass-studio': { cat: 'big', order: 5, title: 'graass studio', img: 'previews/graass.webp',
+    blurb: 'Stylized GPU grass field with steerable wind, colors, light and camera.' },
+  bluntCMS: { cat: 'big' },
   'ai-racing-gdot-thing': { cat: 'big', title: 'AI Racing' },
-  'burnt-fighters':       { cat: 'big' },
+  'burnt-fighters': { cat: 'big' },
   informatica: { cat: 'exp', img: 'previews/informatica.webp', blurb: 'Informatics coursework and experiments, with a gallery.' },
-  factorial2:  { cat: 'exp', img: 'previews/factorial2.webp', blurb: 'Area between x² and cos x: bisection, trapezoids and Simpson.' },
+  factorial2: { cat: 'exp', img: 'previews/factorial2.webp', blurb: 'Area between x² and cos x: bisection, trapezoids and Simpson.' },
   'hypocycloid-explainer': { cat: 'exp', blurb: 'How a hypocycloid is drawn, step by step.' },
 };
 
 // sites on organisations I'm part of
 const ORGS = [
-  { name: 'Cord', cat: 'big', url: 'https://cord-note.github.io/', repo: 'https://github.com/cord-note/cord-note.github.io',
-    img: 'previews/cord.webp', who: 'https://github.com/cord-note.png?size=80', sub: 'Linked notes that stay on your computer.' },
-  { name: 'KNF ULO', cat: 'big', url: 'https://knf-ulo.github.io/', repo: 'https://github.com/knf-ulo/knf-ulo.github.io',
-    img: 'previews/knf.webp', who: 'https://github.com/knf-ulo.png?size=80', sub: 'Physics club building a Formula Student car.' },
+  { title: 'Cord', cat: 'big', order: 1, live: true, url: 'https://cord-note.github.io/', repo: 'https://github.com/cord-note/cord-note.github.io',
+    img: 'previews/cord.webp', logo: 'logos/cord.png', sub: 'Linked notes that stay on your computer.' },
+  { title: 'KNF ULO', cat: 'big', order: 4, live: true, url: 'https://knf-ulo.github.io/', repo: 'https://github.com/knf-ulo/knf-ulo.github.io',
+    img: 'previews/knf.webp', logo: 'logos/knf.png', sub: 'Physics club building a Formula Student car.' },
 ];
 
 // repos never shown
-const HIDE = new Set([USER.toLowerCase(), `${USER.toLowerCase()}.github.io`]);
+const HIDE = new Set([
+  USER, `${USER}.github.io`, 'cpp-project-template', 'wizytowka-business-card', 'portfolio',
+  'GameEngineProject', 'Create-Foundation',
+].map((s) => s.toLowerCase()));
 
 // used when the GitHub API can't be reached
 const SNAPSHOT = [
   ['fold', 1, 'JavaScript', '2026-11-12', ''],
+  ['graass-studio', 1, 'JavaScript', '2026-11-12', ''],
   ['factorial2', 1, 'HTML', '2026-10-16', ''],
   ['informatica', 1, 'HTML', '2026-09-24', ''],
   ['Tessera', 1, 'HTML', '2026-08-26', ''],
@@ -35,15 +43,10 @@ const SNAPSHOT = [
   ['ai-racing-gdot-thing', 0, 'GDScript', '2026-09-09', '3D AI racing competition in Godot 4: build a car\'s brain as a node graph, then race it on tracks it has never seen.'],
   ['burnt-fighters', 0, 'Java', '2026-08-20', 'Makes Create and Create: FireFighting Additions actually put out Burnt Basic fires. NeoForge 1.21.1.'],
   ['hypocycloid-explainer', 0, 'HTML', '2026-07-28', ''],
-  ['portfolio', 0, 'TypeScript', '2026-07-28', ''],
   ['html-arcade', 0, 'JavaScript', '2026-07-28', ''],
   ['html-mini-games', 0, 'HTML', '2026-07-28', ''],
-  ['GameEngineProject', 0, 'C++', '2026-07-28', ''],
-  ['Create-Foundation', 0, 'Java', '2026-07-28', ''],
   ['connect-four-python', 0, 'Python', '2026-07-28', ''],
   ['triangle-geometry-cpp', 0, 'C++', '2026-07-28', ''],
-  ['cpp-project-template', 0, 'C++', '2026-07-28', ''],
-  ['wizytowka-business-card', 0, 'JavaScript', '2026-07-28', ''],
   ['not-so-simple-Roulette', 0, 'C++', '2025-11-02', 'My in progress making of a roulette game in terminal using C++'],
   ['Tetris-in-JS', 0, 'HTML', '2025-03-14', 'This is my go at making playable tetris on a website with JavaScript'],
 ].map(([name, pages, language, pushed_at, description]) => ({
@@ -53,6 +56,7 @@ const SNAPSHOT = [
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pagesUrl = (name) => `https://${USER.toLowerCase()}.github.io/${name}/`;
+const short = (u) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 function ago(date) {
   if (!date) return '';
@@ -63,27 +67,37 @@ function ago(date) {
   return `updated ${Math.floor(d / 365)}y ago`;
 }
 
-const ARROW = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+const ARROW = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 
-function preview(it) {
+// cards that already played their entrance stay put when the list refreshes
+const shown = new Set();
+const rv = (it) => (shown.has(it.title) ? 'reveal in done' : 'reveal');
+
+function card(it, i) {
   const pic = it.img
-    ? `<img class="cover" src="${esc(it.img)}" alt="" loading="lazy">`
+    ? `<img src="${esc(it.img)}" alt="Preview of ${esc(it.title)}" loading="lazy">`
     : `<div class="noimg">${esc(it.title[0])}</div>`;
-  return `<div class="shot">
-    ${pic}
-    <a class="hit" href="${esc(it.url)}" aria-label="Open ${esc(it.title)}"></a>
-    <span class="chip"><span class="dot"></span>Live</span>
-    <a class="code-link" href="${esc(it.repo)}">Code</a>
-    <div class="bar">
-      <img class="who" src="${esc(it.who || me)}" alt="">
+  const logo = it.logo
+    ? `<span class="logo" style="${it.lbg ? `--lbg:${it.lbg};` : ''}${it.lsize ? `--lsize:${it.lsize};` : ''}"><img src="${esc(it.logo)}" alt=""></span>`
+    : '';
+  return `<article class="card rim ${rv(it)} tilt" data-key="${esc(it.title)}" style="--i:${i}">
+    <a class="window" href="${esc(it.url)}" aria-label="Open ${esc(it.title)}">
+      <span class="window-bar"><i></i><i></i><i></i><span>${esc(short(it.url))}</span></span>
+      ${pic}
+      <span class="sheen"></span>
+    </a>
+    <div class="info">
+      ${logo}
       <span class="txt"><span class="name">${esc(it.title)}</span><span class="sub">${esc(it.sub || 'Live on GitHub Pages')}</span></span>
-      <a class="open" href="${esc(it.url)}">${ARROW}Open</a>
+      <a class="btn code" href="${esc(it.repo)}">Code</a>
+      <a class="btn open" href="${esc(it.url)}">${ARROW}Open</a>
     </div>
-  </div>`;
+  </article>`;
 }
 
-function tile(it) {
-  return `<a class="tile glass" href="${esc(it.repo)}">
+function tile(it, i) {
+  return `<a class="tile rim ${rv(it)} tilt" data-key="${esc(it.title)}" href="${esc(it.repo)}" style="--i:${i}">
+    <span class="sheen"></span>
     <div class="tile-top"><span class="lang">${esc(it.lang || 'Repo')}</span><span class="arrow">${ARROW}</span></div>
     <h3>${esc(it.title)}</h3>
     ${it.sub ? `<p>${esc(it.sub)}</p>` : ''}
@@ -97,10 +111,11 @@ function render(repos) {
     .map((r) => {
       const m = MAP[r.name] || {};
       return {
+        ...m,
         title: m.title || r.name,
-        cat: m.cat || (r.has_pages ? 'big' : 'other'),
+        cat: m.cat || (r.has_pages ? 'big' : 'code'),
+        order: m.order || 99,
         live: r.has_pages,
-        img: m.img,
         url: r.homepage || pagesUrl(r.name),
         repo: r.html_url,
         sub: m.blurb || r.description || '',
@@ -109,23 +124,152 @@ function render(repos) {
       };
     });
 
-  const orgs = ORGS.map((o) => ({ ...o, title: o.name, live: true }));
-  const pick = (cat, live) => [...items, ...orgs].filter((i) => i.cat === cat && i.live === live);
+  // skip if nothing changed, so cards don't replay their entrance
+  const key = JSON.stringify(items.map((i) => [i.title, i.cat, i.live, i.sub, i.when]));
+  if (key === render.last) return;
+  render.last = key;
 
-  document.getElementById('big-live').innerHTML = pick('big', true).map(preview).join('');
+  const all = [...items, ...ORGS];
+  const pick = (cat, live) => all.filter((i) => i.cat === cat && i.live === live).sort((a, b) => a.order - b.order);
+
+  document.getElementById('big-live').innerHTML = pick('big', true).map(card).join('');
   document.getElementById('big-code').innerHTML = pick('big', false).map(tile).join('');
-  document.getElementById('exp-live').innerHTML = pick('exp', true).map(preview).join('');
+  document.getElementById('exp-live').innerHTML = pick('exp', true).map(card).join('');
   document.getElementById('exp-code').innerHTML = pick('exp', false).map(tile).join('');
-  document.getElementById('other').innerHTML = items.filter((i) => i.cat === 'other').map(tile).join('');
+  document.getElementById('other').innerHTML = items.filter((i) => i.cat === 'code').map(tile).join('');
 
-  const live = items.filter((i) => i.live).length + orgs.length;
-  document.getElementById('tally').textContent = `${live} live · ${items.length + orgs.length} total`;
+  wire();
 }
 
-// hero fan uses three previews
-document.getElementById('fan').innerHTML = ['previews/cord.webp', 'previews/fold.webp', 'previews/knf.webp']
+// ---------- hero ----------
+document.getElementById('papers').innerHTML = ['previews/fold.webp', 'previews/cord.webp', 'previews/knf.webp']
   .map((src) => `<img src="${src}" alt="">`).join('');
 
+const title = document.querySelector('.title span');
+title.innerHTML = [...title.textContent].map((c, i) => `<span class="ch" style="--i:${i}">${c}</span>`).join('');
+
+// folder leans toward the pointer, light follows it
+(() => {
+  const folder = document.getElementById('folder');
+  const box = folder.querySelector('.folder-3d');
+  const front = folder.querySelector('.f-front');
+  if (still) return;
+  const t = { x: 0, y: 0 }, c = { x: 0, y: 0 };
+  let raf = 0;
+  const loop = () => {
+    c.x += (t.x - c.x) * 0.08;
+    c.y += (t.y - c.y) * 0.08;
+    box.style.setProperty('--ry', `${(c.x * 10).toFixed(2)}deg`);
+    box.style.setProperty('--rx', `${(-c.y * 8).toFixed(2)}deg`);
+    raf = Math.abs(t.x - c.x) + Math.abs(t.y - c.y) > 0.001 ? requestAnimationFrame(loop) : 0;
+  };
+  folder.addEventListener('pointermove', (e) => {
+    const b = folder.getBoundingClientRect();
+    t.x = (e.clientX - b.left) / b.width - 0.5;
+    t.y = (e.clientY - b.top) / b.height - 0.5;
+    const f = front.getBoundingClientRect();
+    front.style.setProperty('--sx', `${e.clientX - f.left}px`);
+    front.style.setProperty('--sy', `${e.clientY - f.top}px`);
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+  folder.addEventListener('pointerleave', () => { t.x = 0; t.y = 0; if (!raf) raf = requestAnimationFrame(loop); });
+})();
+
+// ---------- cards: tilt, light, press, reveal ----------
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    el.classList.add('in');
+    if (el.dataset.key) shown.add(el.dataset.key);
+    io.unobserve(el);
+    // hand transform over to the tilt once the reveal has played
+    setTimeout(() => el.classList.add('done'), 1300 + (parseInt(el.style.getPropertyValue('--i')) || 0) * 70);
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+function wire() {
+  document.querySelectorAll('.reveal:not(.in)').forEach((el) => (still ? el.classList.add('in', 'done') : io.observe(el)));
+  if (still) return;
+  document.querySelectorAll('.tilt:not([data-wired])').forEach((el) => {
+    el.dataset.wired = '1';
+    const sheens = el.querySelectorAll('.sheen');
+    el.addEventListener('pointermove', (e) => {
+      const b = el.getBoundingClientRect();
+      const x = (e.clientX - b.left) / b.width - 0.5;
+      const y = (e.clientY - b.top) / b.height - 0.5;
+      const k = el.classList.contains('tile') ? 7 : 4;
+      el.style.setProperty('--ry', `${(x * k).toFixed(2)}deg`);
+      el.style.setProperty('--rx', `${(-y * k).toFixed(2)}deg`);
+      sheens.forEach((s) => {
+        const sb = s.getBoundingClientRect();
+        s.style.setProperty('--sx', `${e.clientX - sb.left}px`);
+        s.style.setProperty('--sy', `${e.clientY - sb.top}px`);
+      });
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--ry', '0deg');
+      el.style.setProperty('--rx', '0deg');
+      el.classList.remove('pressing');
+    });
+    el.addEventListener('pointerdown', () => el.classList.add('pressing'));
+    el.addEventListener('pointerup', () => el.classList.remove('pressing'));
+  });
+}
+document.querySelectorAll('.block-head.reveal').forEach((el) => io.observe(el));
+
+// ---------- dock: lens springs to the section you're in ----------
+(() => {
+  const dock = document.getElementById('dock');
+  const lens = dock.querySelector('.dock-lens');
+  const btns = [...dock.querySelectorAll('.dock-btn')];
+  const L = { p: 0, v: 0, t: 0 }, R = { p: 0, v: 0, t: 0 };
+  let toRight = true, raf = 0, active = null, hover = null, placed = false;
+
+  const spring = (e, k) => { e.v = (e.v + (e.t - e.p) * k) * 0.64; e.p += e.v; };
+  const paint = () => { lens.style.transform = `translateX(${L.p}px)`; lens.style.width = `${R.p - L.p}px`; };
+  function tick() {
+    spring(L, toRight ? 0.09 : 0.2);
+    spring(R, toRight ? 0.2 : 0.09);
+    paint();
+    const busy = Math.abs(L.t - L.p) + Math.abs(R.t - R.p) + Math.abs(L.v) + Math.abs(R.v) > 0.05;
+    raf = busy ? requestAnimationFrame(tick) : 0;
+  }
+  function moveTo(btn) {
+    btns.forEach((b) => b.classList.toggle('on', b === btn));
+    const l = btn.offsetLeft, r = l + btn.offsetWidth;
+    toRight = l > L.t;
+    L.t = l; R.t = r;
+    if (still || !placed) { placed = true; L.p = l; R.p = r; L.v = R.v = 0; paint(); return; }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  // which section holds the line 35% down the screen
+  const secs = btns.map((b) => document.getElementById(b.dataset.sec));
+  function current() {
+    const line = innerHeight * 0.35;
+    let pick = btns[0];
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) pick = btns[i]; });
+    return pick;
+  }
+  function sync() {
+    const c = current();
+    if (c !== active) { active = c; if (!hover) moveTo(c); }
+  }
+
+  btns.forEach((b) => {
+    b.addEventListener('pointerenter', () => { hover = b; moveTo(b); });
+    b.addEventListener('pointerdown', () => dock.classList.add('pressed'));
+  });
+  addEventListener('pointerup', () => dock.classList.remove('pressed'));
+  dock.addEventListener('pointerleave', () => { hover = null; moveTo(active || current()); });
+  addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', () => { placed = false; moveTo(hover || active || current()); });
+  document.fonts?.ready.then(() => { placed = false; moveTo(active || current()); });
+  sync();
+})();
+
+// ---------- data ----------
 render(SNAPSHOT);
 
 // refresh from GitHub so new sites show up without editing this file
@@ -134,7 +278,7 @@ fetch(`https://api.github.com/users/${USER}/repos?per_page=100&sort=pushed`)
   .then((repos) => { if (Array.isArray(repos) && repos.length) render(repos); })
   .catch(() => {});
 
-// theme toggle
+// ---------- theme ----------
 document.getElementById('theme').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.dataset.theme
@@ -142,4 +286,5 @@ document.getElementById('theme').addEventListener('click', () => {
     : matchMedia('(prefers-color-scheme: dark)').matches;
   root.dataset.theme = dark ? 'light' : 'dark';
   try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+  document.dispatchEvent(new Event('site:theme'));
 });
