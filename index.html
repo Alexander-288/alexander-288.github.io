@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Alexander-288</title>
-  <meta name="description" content="Live sites and projects by Alexander-288.">
+  <meta name="description" content="Live sites, explainers and projects by Alexander-288.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script>
     // apply saved theme before paint
@@ -15,45 +15,86 @@
   </script>
 </head>
 <body>
-  <div class="wrap">
-    <header class="top">
-      <a class="handle" href="https://github.com/Alexander-288">Alexander-288</a>
-      <button id="theme" class="theme" type="button" aria-label="Toggle theme">◐</button>
-    </header>
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
 
-    <section class="intro">
-      <h1>Things I've built<br><em>that you can open right now.</em></h1>
-      <p>Tools, experiments and coursework, all hosted on GitHub Pages. Below that, the rest of my public code.</p>
+  <header class="top">
+    <a class="pill glass" href="https://github.com/Alexander-288">
+      <img class="ava" src="https://github.com/Alexander-288.png?size=64" alt="">
+      Alexander-288
+    </a>
+    <div class="top-right">
+      <span class="pill glass" id="tally">Sites &amp; projects</span>
+      <button class="round glass" id="theme" type="button" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <a class="folder" href="#big" aria-label="Jump to projects">
+        <div class="fan" id="fan"></div>
+        <div class="folder-front glass">
+          <span class="folder-label">*ALEXANDER-288.</span>
+          <span class="go">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </span>
+        </div>
+      </a>
+      <h1>PROJECTS</h1>
+      <span class="year">2026</span>
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>Live sites</h2>
-        <span class="count" id="live-count"></span>
+    <nav class="dock glass" aria-label="Sections">
+      <a href="#big" class="dock-btn dark" title="Big projects">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l1.8 6.2L20 12l-6.2 2.8L12 21l-1.8-6.2L4 12l6.2-2.8z"/></svg>
+        <span>Big</span>
+      </a>
+      <a href="#explainers" class="dock-btn" title="Explainers">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        <span>Explainers</span>
+      </a>
+      <a href="#code" class="dock-btn" title="Code projects">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>
+        <span>Code</span>
+      </a>
+    </nav>
+
+    <section id="big" class="block">
+      <div class="block-head">
+        <h2>Big &amp; specialized</h2>
+        <p>Larger tools and long-running projects.</p>
       </div>
-      <div class="grid" id="live"></div>
+      <div class="previews" id="big-live"></div>
+      <div class="tiles" id="big-code"></div>
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>With my groups</h2>
+    <section id="explainers" class="block">
+      <div class="block-head">
+        <h2>Explainers</h2>
+        <p>Pages that walk through one topic: maths, algorithms, coursework.</p>
       </div>
-      <div class="grid" id="orgs"></div>
+      <div class="previews" id="exp-live"></div>
+      <div class="tiles" id="exp-code"></div>
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>Other projects</h2>
-        <span class="count" id="proj-count"></span>
+    <section id="code" class="block">
+      <div class="block-head">
+        <h2>Code projects</h2>
+        <p>No page yet. Games, experiments and templates on GitHub.</p>
       </div>
-      <ul class="list" id="projects"></ul>
+      <div class="tiles" id="other"></div>
     </section>
+  </main>
 
-    <footer>
-      <span>List updates itself from GitHub.</span>
-      <a href="https://github.com/Alexander-288">github.com/Alexander-288</a>
-    </footer>
-  </div>
+  <footer class="foot">
+    <img class="foot-ava" src="https://github.com/Alexander-288.png?size=128" alt="">
+    <div>
+      <a href="https://github.com/Alexander-288">@Alexander-288</a>
+      <span>The list updates itself from GitHub</span>
+    </div>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
