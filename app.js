@@ -8,7 +8,7 @@ const MAP = {
     blurb: 'Gradient and fold generator on the GPU, with image, video and shader export.' },
   Tessera: { cat: 'big', order: 3, img: 'previews/tessera.webp', logo: 'logos/tessera.svg',
     blurb: 'Color library in your browser. Find colors by describing them.' },
-  'graass-studio': { cat: 'big', order: 5, title: 'graass studio', img: 'previews/graass.webp',
+  'graass-studio': { cat: 'big', order: 5, title: 'graass studio', img: 'previews/graass.webp', logo: 'logos/graass.svg',
     blurb: 'Stylized GPU grass field with steerable wind, colors, light and camera.' },
   bluntCMS: { cat: 'big' },
   'ai-racing-gdot-thing': { cat: 'big', title: 'AI Racing' },
