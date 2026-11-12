@@ -558,7 +558,7 @@ h2 {
   .info .sub { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   .btn.code { display: none; }
   .f-label { left: 16px; top: 14px; font-size: 11px; }
-  .f-sub { left: 16px; top: 31px; font-size: 10.5px; }
+  .f-sub { left: 16px; top: 31px; font-size: 11px; }
   .f-go { width: 46px; height: 46px; right: 12px; bottom: 12px; }
 }
 
