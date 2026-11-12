@@ -16,12 +16,33 @@ const MAP = {
   informatica: { cat: 'exp', img: 'previews/informatica.webp', blurb: 'Informatics coursework and experiments, with a gallery.' },
   factorial2: { cat: 'exp', img: 'previews/factorial2.webp', blurb: 'Area between x² and cos x: bisection, trapezoids and Simpson.' },
   'hypocycloid-explainer': { cat: 'exp', blurb: 'How a hypocycloid is drawn, step by step.' },
+  canvaskit: { cat: 'big', order: 6, title: 'CanvasKit', img: 'previews/canvaskit.webp', logo: 'logos/canvaskit.svg',
+    blurb: 'Clean, glassy whiteboard built on Excalidraw.' },
+};
+const MAPL = Object.fromEntries(Object.entries(MAP).map(([k, v]) => [k.toLowerCase(), v]));
+
+// Cord gets its own folder: the site plus every repo in the cord-note org
+const CORD = {
+  org: 'cord-note',
+  site: { title: 'Cord', url: 'https://cord-note.github.io/', repo: 'https://github.com/cord-note/cord-note.github.io',
+    img: 'previews/cord.webp', logo: 'logos/cord.png', sub: 'Linked notes that stay on your computer.' },
+  skip: new Set(['.github', 'cord-note.github.io']),
+  meta: {
+    cord: { order: 1, icon: 'app', blurb: 'The desktop app. Vaults, notes, links and tags as a graph.' },
+    shuttle: { order: 2, icon: 'text', blurb: 'Rich-text editor for note apps, on Tiptap 3. On npm as shuttle-editor.' },
+    'cord-mcp': { order: 3, icon: 'plug', blurb: 'Lets Claude and other MCP clients read and write your notes.' },
+    'cord-themes': { order: 4, icon: 'palette', blurb: 'Nine colour themes: Catppuccin, Nord, Gruvbox and more.' },
+  },
+  snapshot: [
+    ['cord', 'TypeScript', '2026-11-10'],
+    ['shuttle', 'TypeScript', '2026-11-08'],
+    ['cord-mcp', 'JavaScript', '2026-11-05'],
+    ['cord-themes', 'CSS', '2026-11-01'],
+  ].map(([name, language, pushed_at]) => ({ name, language, pushed_at, html_url: `https://github.com/cord-note/${name}` })),
 };
 
 // sites on organisations I'm part of
 const ORGS = [
-  { title: 'Cord', cat: 'big', order: 1, live: true, url: 'https://cord-note.github.io/', repo: 'https://github.com/cord-note/cord-note.github.io',
-    img: 'previews/cord.webp', logo: 'logos/cord.png', sub: 'Linked notes that stay on your computer.' },
   { title: 'KNF ULO', cat: 'big', order: 4, live: true, url: 'https://knf-ulo.github.io/', repo: 'https://github.com/knf-ulo/knf-ulo.github.io',
     img: 'previews/knf.webp', logo: 'logos/knf.png', sub: 'Physics club building a Formula Student car.' },
 ];
@@ -105,11 +126,71 @@ function tile(it, i) {
   </a>`;
 }
 
+// small line icons for the files in the Cord folder
+const ICONS = {
+  app: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 9h18M9 9v10"/>',
+  text: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
+  plug: '<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/>',
+  palette: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/>',
+  file: '<path d="M7 3h7l5 5v13H7zM14 3v5h5"/>',
+};
+const icon = (k) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[k] || ICONS.file}</svg>`;
+
+function renderCord(repos) {
+  const files = repos
+    .filter((r) => !r.fork && !r.archived && !CORD.skip.has(r.name))
+    .map((r) => ({ ...(CORD.meta[r.name] || {}), name: r.name, lang: r.language, when: ago(r.pushed_at), url: r.html_url, desc: r.description }))
+    .sort((a, b) => (a.order || 99) - (b.order || 99));
+
+  const key = JSON.stringify(files.map((f) => [f.name, f.when]));
+  if (key === renderCord.last) return;
+  renderCord.last = key;
+
+  const s = CORD.site;
+  const el = document.getElementById('cord');
+  const done = el.firstElementChild?.classList.contains('in');
+  el.innerHTML = `<div class="cf ${done ? 'reveal in done' : 'reveal'}">
+    <div class="cf-shape">
+      <a class="cf-tab" href="https://github.com/${CORD.org}">
+        <span class="logo" style="--lbg:#111;--lsize:72%"><img src="${esc(s.logo)}" alt=""></span>
+        <span class="cf-org">${CORD.org}</span>
+        <span class="cf-count">${files.length + 1} repos</span>
+      </a>
+      <div class="cf-body">
+        <article class="cf-site tilt">
+          <a class="window" href="${esc(s.url)}" aria-label="Open ${esc(s.title)}">
+            <span class="window-bar"><i></i><i></i><i></i><span>${esc(short(s.url))}</span></span>
+            <img src="${esc(s.img)}" alt="Preview of ${esc(s.title)}" loading="lazy">
+            <span class="sheen"></span>
+          </a>
+          <div class="info">
+            <span class="txt"><span class="name">${esc(s.title)}</span><span class="sub">${esc(s.sub)}</span></span>
+            <a class="btn code" href="${esc(s.repo)}">Code</a>
+            <a class="btn open" href="${esc(s.url)}">${ARROW}Open</a>
+          </div>
+        </article>
+        <div class="cf-files">
+          ${files.map((f, i) => `<a class="cf-file" href="${esc(f.url)}" style="--i:${i}">
+            <span class="cf-ico">${icon(f.icon)}</span>
+            <span class="cf-txt">
+              <span class="cf-name">${esc(f.name)}</span>
+              <span class="cf-desc">${esc(f.blurb || f.desc || '')}</span>
+              <span class="cf-meta">${esc([f.lang, f.when].filter(Boolean).join(' · '))}</span>
+            </span>
+            <span class="arrow">${ARROW}</span>
+          </a>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  wire();
+}
+
 function render(repos) {
   const items = repos
     .filter((r) => !r.fork && !r.archived && !HIDE.has(r.name.toLowerCase()))
     .map((r) => {
-      const m = MAP[r.name] || {};
+      const m = MAP[r.name] || MAPL[r.name.toLowerCase()] || {};
       return {
         ...m,
         title: m.title || r.name,
@@ -271,12 +352,15 @@ document.querySelectorAll('.block-head.reveal').forEach((el) => io.observe(el));
 
 // ---------- data ----------
 render(SNAPSHOT);
+renderCord(CORD.snapshot);
 
-// refresh from GitHub so new sites show up without editing this file
-fetch(`https://api.github.com/users/${USER}/repos?per_page=100&sort=pushed`)
+// refresh from GitHub so new sites and repos show up without editing this file
+const gh = (path, fn) => fetch(`https://api.github.com/${path}`)
   .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-  .then((repos) => { if (Array.isArray(repos) && repos.length) render(repos); })
+  .then((repos) => { if (Array.isArray(repos) && repos.length) fn(repos); })
   .catch(() => {});
+gh(`users/${USER}/repos?per_page=100&sort=pushed`, render);
+gh(`orgs/${CORD.org}/repos?per_page=100`, renderCord);
 
 // ---------- theme ----------
 document.getElementById('theme').addEventListener('click', () => {
