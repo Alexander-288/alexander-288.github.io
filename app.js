@@ -45,6 +45,8 @@ const CORD = {
 const ORGS = [
   { title: 'KNF ULO', cat: 'big', order: 4, live: true, url: 'https://knf-ulo.github.io/', repo: 'https://github.com/knf-ulo/knf-ulo.github.io',
     img: 'previews/knf.webp', logo: 'logos/knf.png', sub: 'Physics club building a Formula Student car.' },
+  { title: 'Personal site', cat: 'big', order: 7, live: true, url: 'https://tryton.vlo.gda.pl/u/s296/',
+    img: 'previews/personal.webp', logo: 'logos/a-paper.svg', lbg: '#111', lsize: '58%', sub: 'Design engineer: interfaces, tools and the systems behind them.' },
 ];
 
 // repos never shown
@@ -110,7 +112,7 @@ function card(it, i) {
     <div class="info">
       ${logo}
       <span class="txt"><span class="name">${esc(it.title)}</span><span class="sub">${esc(it.sub || 'Live on GitHub Pages')}</span></span>
-      <a class="btn code" href="${esc(it.repo)}">Code</a>
+      ${it.repo ? `<a class="btn code" href="${esc(it.repo)}">Code</a>` : ''}
       <a class="btn open" href="${esc(it.url)}">${ARROW}Open</a>
     </div>
   </article>`;

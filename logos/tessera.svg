@@ -1,10 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="Tessera">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-91 -42.5 556 556" role="img" aria-label="Tessera">
   <title>Tessera</title>
-  <rect width="16" height="16" fill="#FFFFFF"/>
-  <g fill="none" stroke="#000000" stroke-width="1">
-    <rect x="0.5" y="0.5" width="6" height="6" fill="#000000"/>
-    <rect x="9.5" y="0.5" width="6" height="6"/>
-    <rect x="0.5" y="9.5" width="6" height="6"/>
-    <rect x="9.5" y="9.5" width="6" height="6"/>
-  </g>
+  <rect x="-91" y="-42.5" width="556" height="556" fill="#FFFFFF"/>
+  <path fill="#3B1D7A" d="M50 371 246 371 196 471 0 471 Z"/><path fill="#7C3AED" d="M50 249 246 249 196 349 0 349 Z"/><path fill="#D946AA" d="M50 127 246 127 196 227 0 227 Z"/><path fill="#FFB357" d="M178 0 374 0 324 100 128 100 Z"/>
 </svg>
