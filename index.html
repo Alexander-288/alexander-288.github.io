@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alexander-288</title>
+  <meta name="description" content="Live sites and projects by Alexander-288.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // apply saved theme before paint
+    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="handle" href="https://github.com/Alexander-288">Alexander-288</a>
+      <button id="theme" class="theme" type="button" aria-label="Toggle theme">◐</button>
+    </header>
+
+    <section class="intro">
+      <h1>Things I've built<br><em>that you can open right now.</em></h1>
+      <p>Tools, experiments and coursework, all hosted on GitHub Pages. Below that, the rest of my public code.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Live sites</h2>
+        <span class="count" id="live-count"></span>
+      </div>
+      <div class="grid" id="live"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>With my groups</h2>
+      </div>
+      <div class="grid" id="orgs"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Other projects</h2>
+        <span class="count" id="proj-count"></span>
+      </div>
+      <ul class="list" id="projects"></ul>
+    </section>
+
+    <footer>
+      <span>List updates itself from GitHub.</span>
+      <a href="https://github.com/Alexander-288">github.com/Alexander-288</a>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
