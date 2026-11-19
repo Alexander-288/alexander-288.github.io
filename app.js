@@ -16,6 +16,8 @@ const MAP = {
   informatica: { cat: 'exp', img: 'previews/informatica.webp', blurb: 'Informatics coursework and experiments, with a gallery.' },
   factorial2: { cat: 'exp', img: 'previews/factorial2.webp', blurb: 'Area between x² and cos x: bisection, trapezoids and Simpson.' },
   'hypocycloid-explainer': { cat: 'exp', blurb: 'How a hypocycloid is drawn, step by step.' },
+  'sorting-showcase': { cat: 'exp', title: 'Sorting Showcase',
+    blurb: 'Four sorts shown four ways: a 512-byte bootloader, desktop windows, a screensaver and a terminal.' },
   canvaskit: { cat: 'big', order: 6, title: 'CanvasKit', img: 'previews/canvaskit.webp', logo: 'logos/canvaskit.svg',
     blurb: 'Clean, glassy whiteboard built on Excalidraw.' },
 };
@@ -59,6 +61,7 @@ const HIDE = new Set([
 const SNAPSHOT = [
   ['fold', 1, 'JavaScript', '2026-11-12', ''],
   ['graass-studio', 1, 'JavaScript', '2026-11-12', ''],
+  ['sorting-showcase', 0, 'Rust', '2026-11-19', ''],
   ['factorial2', 1, 'HTML', '2026-10-16', ''],
   ['informatica', 1, 'HTML', '2026-09-24', ''],
   ['Tessera', 1, 'HTML', '2026-08-26', ''],
